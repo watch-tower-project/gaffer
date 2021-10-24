@@ -14,13 +14,15 @@ class GafferConfig:
         self.mongo_uri = mongo_uri
         self.db_name = db_name
 
-    def __create_db_client(self):
-        mongo_connection = pymongo.MongoClient(self.mongo_uri)
-        mongo_db = mongo_connection[self.db_name]
-        return mongo_db
+        def __create_db_client(self):
+            mongo_connection = pymongo.MongoClient(self.mongo_uri)
+            mongo_db = mongo_connection[self.db_name]
+            return mongo_db
+
+        self.db_client = __create_db_client()
 
     def __node_queue_map_db(self):
-        return self.__create_db_client()[node_queue_map_collection]
+        return self.db_client[node_queue_map_collection]
 
     def add_node_queue_map(self, queue_address, node_name):
         try:
